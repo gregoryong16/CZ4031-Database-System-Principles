@@ -368,103 +368,103 @@ public class BPTree {
 	}
 
 	// 3: Deletion Functions
-	// Test 1: Remove Key
-	public void removeKey(int key) {
-
-		// Reset
-		numDeleted = 0;
-		numMerged = 0;
-
-		Node curr = this.root;
-
-		// Minimum number of keys to balance the b-tree in the leaf node
-		int minLeafKeys = (int) Math.floor(m / 2.0);
-		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
-
-		// Minimum number of keys to balance the b-tree in the non-leaf node
-		int minInternalKeys = (int) Math.floor((m - 1) / 2.0);
-		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
-
-		// Minimum number of children node to balance the b-tree in the non-leaf node
-		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
-		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
-
-		while (curr.getChildren().size() != 0) {
-			curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
-			System.out.println("curr: " + curr.getKeys());
-			System.out.println("curr children: " + curr.getChildren() + " | Size: " + curr.getChildren().size());
-
-			List<Key> keys = curr.getKeys();
-
-			if (curr.isLeaf == false) {
-				System.out.println("=Internal=");
-				System.out.println("Here: " + keys + " | Size: " + keys.size());
-
-				System.out.println("Children: " + curr.getChildren());
-
-				// If key is in non-leaf node, remove key
-				for (int i = 0; i < keys.size(); i++) {
-					if (keys.get(i).getKey() == key) {
-						System.out.println("Removed");
-						keys.remove(i);
-					}
-				}
-
-				// if key size is less than min. keys required in non leaf node
-				if (keys.size() < minInternalKeys) {
-					Node firstChildrenNode = curr.getChildren().get(0);
-					System.out.println("Children Key: " + firstChildrenNode.getKeys());
-					curr.setKeys(firstChildrenNode.getKeys());
-
-				}
-
-			} else {
-				System.out.println("=Leaf=");
-				System.out.println("Here: " + keys + " | Size: " + keys.size());
-
-				// If key is in leaf node, remove key
-				for (int i = 0; i < keys.size(); i++) {
-					if (keys.get(i).getKey() == key) {
-						keys.remove(i);
-					}
-				}
-
-				List<Node> nodeList = curr.getParent().getChildren();
-
-				System.out.println("Curr: " + curr.getParent().getChildren());
-				for (int i = 0; i < nodeList.size(); i++) {
-					if (nodeList.get(i).getKeys().size() == 0) {
-						nodeList.remove(i);
-					}
-				}
-
-				// 1: If node has less than ceil(m/2):
-				if (keys.size() < minLeafKeys) {
-					System.out.println("Not enough keys in node");
-					System.out.println("Parent: " + curr.getParent());
-					System.out.println("Next Sibling: " + curr.getNext());
-					System.out.println("Prev Sibling: " + curr.getPrev());
-
-					// See if sibling can lend a key
-					// If can borrow, borrow key and adjust parent node keys
-					Node nextNode = curr.getNext();
-					Node prevNode = curr.getPrev();
-					Node parentNode = curr.getParent();
-
-					// If cannot borrow, merge with sibling & adjust parent node keys
-
-					if (parentNode != null) {
-						System.out.println("Parent Children: " + curr.getParent().getChildren());
-
-					}
-
-				} else {
-					// If smallest key is deleted push up the next key
-				}
-			}
-		}
-
-	}
+//	// Test 1: Remove Key
+//	public void removeKey(int key) {
+//
+//		// Reset
+//		numDeleted = 0;
+//		numMerged = 0;
+//
+//		Node curr = this.root;
+//
+//		// Minimum number of keys to balance the b-tree in the leaf node
+//		int minLeafKeys = (int) Math.floor(m / 2.0);
+//		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
+//
+//		// Minimum number of keys to balance the b-tree in the non-leaf node
+//		int minInternalKeys = (int) Math.floor((m - 1) / 2.0);
+//		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
+//
+//		// Minimum number of children node to balance the b-tree in the non-leaf node
+//		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
+//		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
+//
+//		while (curr.getChildren().size() != 0) {
+//			curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
+//			System.out.println("curr: " + curr.getKeys());
+//			System.out.println("curr children: " + curr.getChildren() + " | Size: " + curr.getChildren().size());
+//
+//			List<Key> keys = curr.getKeys();
+//
+//			if (curr.isLeaf == false) {
+//				System.out.println("=Internal=");
+//				System.out.println("Here: " + keys + " | Size: " + keys.size());
+//
+//				System.out.println("Children: " + curr.getChildren());
+//
+//				// If key is in non-leaf node, remove key
+//				for (int i = 0; i < keys.size(); i++) {
+//					if (keys.get(i).getKey() == key) {
+//						System.out.println("Removed");
+//						keys.remove(i);
+//					}
+//				}
+//
+//				// if key size is less than min. keys required in non leaf node
+//				if (keys.size() < minInternalKeys) {
+//					Node firstChildrenNode = curr.getChildren().get(0);
+//					System.out.println("Children Key: " + firstChildrenNode.getKeys());
+//					curr.setKeys(firstChildrenNode.getKeys());
+//
+//				}
+//
+//			} else {
+//				System.out.println("=Leaf=");
+//				System.out.println("Here: " + keys + " | Size: " + keys.size());
+//
+//				// If key is in leaf node, remove key
+//				for (int i = 0; i < keys.size(); i++) {
+//					if (keys.get(i).getKey() == key) {
+//						keys.remove(i);
+//					}
+//				}
+//
+//				List<Node> nodeList = curr.getParent().getChildren();
+//
+//				System.out.println("Curr: " + curr.getParent().getChildren());
+//				for (int i = 0; i < nodeList.size(); i++) {
+//					if (nodeList.get(i).getKeys().size() == 0) {
+//						nodeList.remove(i);
+//					}
+//				}
+//
+//				// 1: If node has less than ceil(m/2):
+//				if (keys.size() < minLeafKeys) {
+//					System.out.println("Not enough keys in node");
+//					System.out.println("Parent: " + curr.getParent());
+//					System.out.println("Next Sibling: " + curr.getNext());
+//					System.out.println("Prev Sibling: " + curr.getPrev());
+//
+//					// See if sibling can lend a key
+//					// If can borrow, borrow key and adjust parent node keys
+//					Node nextNode = curr.getNext();
+//					Node prevNode = curr.getPrev();
+//					Node parentNode = curr.getParent();
+//
+//					// If cannot borrow, merge with sibling & adjust parent node keys
+//
+//					if (parentNode != null) {
+//						System.out.println("Parent Children: " + curr.getParent().getChildren());
+//
+//					}
+//
+//				} else {
+//					// If smallest key is deleted push up the next key
+//				}
+//			}
+//		}
+//
+//	}
 
 	// Test 2: Remove Key
 	public void deleteKey(int key) {
@@ -534,12 +534,14 @@ public class BPTree {
 
 				int keyCount = 0;
 				// If key is in leaf node, remove key
-				for (; keyCount < keys.size(); keyCount++) {
+				int originalKeySize=keys.size();
+				for (; keyCount < originalKeySize; keyCount++) {
 					if (keys.get(keyCount).getKey() == key) {
 						keys.remove(keyCount);
+						break;
 					}
 				}
-				if(keyCount == keys.size()){
+				if(keyCount == originalKeySize){
 					System.out.println("Key does not exist");
 					return;
 				}
@@ -591,7 +593,6 @@ public class BPTree {
 
 					if (parentNode != null) {
 						System.out.println("Parent Children: " + curr.getParent().getChildren());
-						// Check if previous node is a sibling of the same children node
 						int noChildren = curr.getParent().getChildren().size();
 						System.out.println("Number of children for parent node: " + noChildren);
 						int count = 0;
@@ -600,7 +601,9 @@ public class BPTree {
 								count++;
 							}
 						}
-						// Check if possible to borrow from left sibling
+						boolean ableLeftBorrow = false;
+						boolean ableRightBorrow = false;
+						// Check if previous node is a sibling of the same children node
 						if(count < noChildren){
 							System.out.println("Previous node shares same parent");
 							//check if possible to borrow key from previous sibling
@@ -608,44 +611,29 @@ public class BPTree {
 							int end = prevNode.getKeys().size() - 1;
 							if(prevNode.getKeys().size() - 1 > minLeafKeys) { // Add the last element//
 								keys.add(start, prevNode.getKeys().get(end));
+								prevNode.getKeys().remove(end);
+								ableLeftBorrow = true;
+							}
+							else {
+								//check if can borrow From right sibling
+								ableRightBorrow = borrowRight(curr, nextNode, parentNode, minLeafKeys, keys);
 							}
 						}
+						// Check if able to borrow from right
 						else{
 							System.out.println("Previous node does not share same parent");
 							//check if possible to borrow key from next sibling
-							int end = curr.getKeys().size()+1;
-							if(nextNode.getKeys().size()-1 >= minLeafKeys){
-								System.out.println("Possible to borrow from next sibling");
-								int prevNextNodeSmallestKey = nextNode.getKeys().get(0).getKey();
-								System.out.println("Next sibling smallest key: "+nextNode.getKeys().get(0));
-								keys.add(nextNode.getKeys().get(0));
-								//shift all the keys in next sibling back by 1
-								List<Key> nextNodeKeys = nextNode.getKeys();
-								for(int i=0;i<nextNode.getKeys().size()-1;i++){
-									nextNodeKeys.set(i, nextNode.getKeys().get(i+1));
-								}
-								//remove last element of next Node
-								nextNodeKeys.remove(nextNode.getKeys().size()-1);
-								System.out.println("Updated current node keys: " + keys);
-								System.out.println("Updated right sibling node keys: " + nextNode.getKeys());
-								//propagate changes to parent node
-								int newSmallestNextNodeKey = nextNode.getKeys().get(0).getKey();
-								System.out.println("Smallest Next Node Key: " + newSmallestNextNodeKey);
-								for (int i = 0; i < parentNode.getKeys().size(); i++) {
-									// Find the previous smallest key of current node in the parent node
-									if (parentNode.getKeys().get(i).getKey() == prevNextNodeSmallestKey) {
-										// Get the new smallest key of current node at index position 0 and update the
-										// new smallest key in the parent node
-										parentNode.getKeys().get(i).setKey(newSmallestNextNodeKey);
-									}
-								}
-								System.out.println("Parent: " + curr.getParent());
-							}
-							else {
-								System.out.println("Impossible to borrow from next sibling");
-								//insert logic for deletion and merging
-							}
+							ableRightBorrow = borrowRight(curr, nextNode, parentNode, minLeafKeys, keys);
+						}
 
+						//do deletion and merging if fail to borrow
+						if(ableLeftBorrow == false && ableRightBorrow == false){
+							/*
+							insert logic for merging. Left node always merge with right node, so all keys and pointers will shift to left node
+							Need to propagate changes to parent node
+							 */
+							numDeleted++;
+							numMerged++;
 						}
 
 					}
@@ -666,6 +654,42 @@ public class BPTree {
 			}
 		}
 
+	}
+
+	public boolean borrowRight(Node curr, Node nextNode, Node parentNode, int minLeafKeys, List<Key> keys){
+		if(nextNode.getKeys().size()-1 >= minLeafKeys){
+			System.out.println("Possible to borrow from next sibling");
+			int prevNextNodeSmallestKey = nextNode.getKeys().get(0).getKey();
+			System.out.println("Next sibling smallest key: "+nextNode.getKeys().get(0));
+			keys.add(nextNode.getKeys().get(0));
+			//shift all the keys in next sibling back by 1
+			List<Key> nextNodeKeys = nextNode.getKeys();
+			for(int i=0;i<nextNode.getKeys().size()-1;i++){
+				nextNodeKeys.set(i, nextNode.getKeys().get(i+1));
+			}
+			//remove last element of next Node
+			nextNodeKeys.remove(nextNode.getKeys().size()-1);
+			System.out.println("Updated current node keys: " + keys);
+			System.out.println("Updated right sibling node keys: " + nextNode.getKeys());
+			//propagate changes to parent node
+			int newSmallestNextNodeKey = nextNode.getKeys().get(0).getKey();
+			System.out.println("Smallest Next Node Key: " + newSmallestNextNodeKey);
+			for (int i = 0; i < parentNode.getKeys().size(); i++) {
+				// Find the previous smallest key of current node in the parent node
+				if (parentNode.getKeys().get(i).getKey() == prevNextNodeSmallestKey) {
+					// Get the new smallest key of current node at index position 0 and update the
+					// new smallest key in the parent node
+					parentNode.getKeys().get(i).setKey(newSmallestNextNodeKey);
+				}
+			}
+			System.out.println("Parent: " + curr.getParent());
+			return true;
+		}
+		else {
+			System.out.println("Impossible to borrow from next sibling");
+			//insert logic for deletion and merging
+			return false;
+		}
 	}
 
 	// 4: Display Functions
@@ -754,7 +778,7 @@ public class BPTree {
 				height = levelNumber;
 				levelNumber++;
 				if(rootAndFirst < 2) {
-					System.out.println("\n" + "Printing level " + levelNumber);
+					System.out.println("\n" + "Printing level " + (levelNumber-1));
 				}
 				continue;
 			}
