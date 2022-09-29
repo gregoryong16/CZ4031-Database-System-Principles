@@ -378,16 +378,16 @@ public class BPTree {
 		Node curr = this.root;
 
 		// Minimum number of keys to balance the b-tree in the leaf node
-		int minKeysLeafNode = (int) Math.floor(m / 2.0);
-		System.out.println("Minimum number of keys in the leaf node: " + minKeysLeafNode);
+		int minLeafKeys = (int) Math.floor(m / 2.0);
+		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
 
 		// Minimum number of keys to balance the b-tree in the non-leaf node
-		int minKeysNonLeafNode = (int) Math.floor((m - 1) / 2.0);
-		System.out.println("Minimum number of keys in the non-leaf node: " + minKeysNonLeafNode);
+		int minInternalKeys = (int) Math.floor((m - 1) / 2.0);
+		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
 
 		// Minimum number of children node to balance the b-tree in the non-leaf node
-		int minChildrenNonLeafNode = (int) Math.ceil((m) / 2.0);
-		System.out.println("Minimum number of children in the non-leaf node: " + minChildrenNonLeafNode);
+		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
+		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
 
 		while (curr.getChildren().size() != 0) {
 			curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
@@ -411,7 +411,7 @@ public class BPTree {
 				}
 
 				// if key size is less than min. keys required in non leaf node
-				if (keys.size() < minKeysNonLeafNode) {
+				if (keys.size() < minInternalKeys) {
 					Node firstChildrenNode = curr.getChildren().get(0);
 					System.out.println("Children Key: " + firstChildrenNode.getKeys());
 					curr.setKeys(firstChildrenNode.getKeys());
@@ -439,7 +439,7 @@ public class BPTree {
 				}
 
 				// 1: If node has less than ceil(m/2):
-				if (keys.size() < minKeysLeafNode) {
+				if (keys.size() < minLeafKeys) {
 					System.out.println("Not enough keys in node");
 					System.out.println("Parent: " + curr.getParent());
 					System.out.println("Next Sibling: " + curr.getNext());
@@ -476,16 +476,17 @@ public class BPTree {
 		Node curr = this.root;
 
 		// Minimum number of keys to balance the b-tree in the leaf node
-		int minKeysLeafNode = (int) Math.floor(m / 2.0);
-		System.out.println("Minimum number of keys in the leaf node: " + minKeysLeafNode);
+		int minLeafKeys = (int) Math.floor( (m+1) / 2.0);
+		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
 
 		// Minimum number of keys to balance the b-tree in the non-leaf node
-		int minKeysNonLeafNode = (int) Math.floor((m - 1) / 2.0);
-		System.out.println("Minimum number of keys in the non-leaf node: " + minKeysNonLeafNode);
+		int minInternalKeys = (int) Math.floor((m) / 2.0);
+		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
 
 		// Minimum number of children node to balance the b-tree in the non-leaf node
-		int minChildrenNonLeafNode = (int) Math.ceil((m) / 2.0);
-		System.out.println("Minimum number of children in the non-leaf node: " + minChildrenNonLeafNode);
+//		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
+		int minInternalNodeChildren = 2;
+		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
 
 		/*
 		 * if(curr.getChildren().isEmpty()) { List<Key> keys = curr.getKeys();
@@ -520,7 +521,7 @@ public class BPTree {
 				}
 
 				// if key size is less than min. keys required in non leaf node
-				if (keys.size() < minKeysNonLeafNode) {
+				if (keys.size() < minInternalKeys) {
 					Node firstChildrenNode = curr.getChildren().get(0);
 					System.out.println("Children Key: " + firstChildrenNode.getKeys());
 					curr.setKeys(firstChildrenNode.getKeys());
@@ -540,15 +541,15 @@ public class BPTree {
 
 				List<Node> nodeList = curr.getParent().getChildren();
 
-				System.out.println("Curr: " + curr.getParent().getChildren());
+				System.out.println("Updated children nodes: " + curr.getParent().getChildren());
 				for (int i = 0; i < nodeList.size(); i++) {
 					if (nodeList.get(i).getKeys().size() == 0) {
 						nodeList.remove(i);
 					}
 				}
 
-				// 1: If node has less than ceil(m/2):
-				if (keys.size() < minKeysLeafNode) {
+				// 1: If node has less than ceil(m+1/2):
+				if (keys.size() < minLeafKeys) {
 					System.out.println("Not enough keys in node");
 					System.out.println("Parent: " + curr.getParent());
 					System.out.println("Next Sibling: " + curr.getNext());
@@ -566,7 +567,7 @@ public class BPTree {
 					 * Check right sibling
 					 * 
 					 * int st = 0; int end = prevNode.getKeys().size() - 1;
-					 * if(prevNode.getKeys().size() - 1 > minKeysLeafNode) { // Add the last element
+					 * if(prevNode.getKeys().size() - 1 > minLeafKeys) { // Add the last element
 					 * key of left sibling to current node keys.add(st,
 					 * prevNode.getKeys().get(end));
 					 * 
@@ -576,7 +577,7 @@ public class BPTree {
 					 * key) { // Get the new smallest key of current node at index position 0 and
 					 * update the new smallest key in the parent node
 					 * parentNode.getKeys().get(i).setKey(keys.get(st).getKey()); } } } else
-					 * if(nextNode.getKeys().size() - 1 > minKeysLeafNode) { // Add the first
+					 * if(nextNode.getKeys().size() - 1 > minLeafKeys) { // Add the first
 					 * element key of right sibling to current node
 					 * keys.add(nextNode.getKeys().get(st)); }
 					 */
@@ -585,6 +586,62 @@ public class BPTree {
 
 					if (parentNode != null) {
 						System.out.println("Parent Children: " + curr.getParent().getChildren());
+						// Check if previous node is a sibling of the same children node
+						int noChildren = curr.getParent().getChildren().size();
+						System.out.println("Number of children for parent node: " + noChildren);
+						int count = 0;
+						while (count < noChildren){
+							if(prevNode != curr.getParent().getChildren().get(count)){
+								count++;
+							}
+						}
+						// Check if possible to borrow from left sibling
+						if(count < noChildren){
+							System.out.println("Previous node shares same parent");
+							//check if possible to borrow key from previous sibling
+							int start = 0;
+							int end = prevNode.getKeys().size() - 1;
+							if(prevNode.getKeys().size() - 1 > minLeafKeys) { // Add the last element//
+								keys.add(start, prevNode.getKeys().get(end));
+							}
+						}
+						else{
+							System.out.println("Previous node does not share same parent");
+							//check if possible to borrow key from next sibling
+							int end = curr.getKeys().size()+1;
+							if(nextNode.getKeys().size()-1 >= minLeafKeys){
+								System.out.println("Possible to borrow from next sibling");
+								int prevNextNodeSmallestKey = nextNode.getKeys().get(0).getKey();
+								System.out.println("Next sibling smallest key: "+nextNode.getKeys().get(0));
+								keys.add(nextNode.getKeys().get(0));
+								//shift all the keys in next sibling back by 1
+								List<Key> nextNodeKeys = nextNode.getKeys();
+								for(int i=0;i<nextNode.getKeys().size()-1;i++){
+									nextNodeKeys.set(i, nextNode.getKeys().get(i+1));
+								}
+								//remove last element of next Node
+								nextNodeKeys.remove(nextNode.getKeys().size()-1);
+								System.out.println("Updated current node keys: " + keys);
+								System.out.println("Updated right sibling node keys: " + nextNode.getKeys());
+								//propagate changes to parent node
+								int newSmallestNextNodeKey = nextNode.getKeys().get(0).getKey();
+								System.out.println("Smallest Next Node Key: " + newSmallestNextNodeKey);
+								for (int i = 0; i < parentNode.getKeys().size(); i++) {
+									// Find the previous smallest key of current node in the parent node
+									if (parentNode.getKeys().get(i).getKey() == prevNextNodeSmallestKey) {
+										// Get the new smallest key of current node at index position 0 and update the
+										// new smallest key in the parent node
+										parentNode.getKeys().get(i).setKey(newSmallestNextNodeKey);
+									}
+								}
+								System.out.println("Parent: " + curr.getParent());
+							}
+							else {
+								System.out.println("Impossible to borrow from next sibling");
+								//insert logic for deletion and merging
+							}
+
+						}
 
 					}
 
@@ -667,12 +724,63 @@ public class BPTree {
 		System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
 		System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
 	}
+	public void displayDeleteInfo(){
+		displayUpdatedNodesInfo();
+
+		numOfNodes = 0;
+		recordsCountTotal = 0;
+		recordsCountInANode = 0;
+		height = 0;
+		uniqueKeysCount = 1;
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.add(this.root);
+		queue.add(null);
+		Node curr = null;
+		int levelNumber = 2;
+		System.out.println("Printing level 1 (Root)");
+		int rootAndFirst = 0;
+		while (!queue.isEmpty()) {
+			curr = queue.poll();
+			if (null == curr) {
+				queue.add(null);
+				if (queue.peek() == null) {
+					break;
+				}
+				height = levelNumber;
+				System.out.println("\n" + "Printing level " + levelNumber++);
+				continue;
+			}
+			if(rootAndFirst < 2) {
+				displayNodeInfo(curr);
+			}
+			numOfNodes++;
+
+			if (curr.getChildren().isEmpty()) {
+				break;
+			}
+			for (int i = 0; i < curr.getChildren().size(); i++) {
+				queue.add(curr.getChildren().get(i));
+			}
+			rootAndFirst++;
+		}
+
+		curr = curr.getNext();
+		while (null != curr) {
+//			displayNodeInfo(curr);
+			numOfNodes++;
+			curr = curr.getNext();
+		}
+		System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
+		System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
+
+		displayHeightInfo();
+	}
 
 	private void displayNodeInfo(Node curr) {
 
 		for (int i = 0; i < curr.getKeys().size(); i++) {
 			recordsCountInANode = 0;
-			System.out.print(curr.getKeys().get(i).getKey() + ":(");
+			System.out.print("||" + curr.getKeys().get(i).getKey() + ":(");
 			String values = "";
 			for (int j = 0; j < curr.getKeys().get(i).getValues().size(); j++) {
 				values = values + curr.getKeys().get(i).getValues().get(j) + ",";

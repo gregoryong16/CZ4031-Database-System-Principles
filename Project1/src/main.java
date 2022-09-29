@@ -31,13 +31,13 @@ public class main {
 			switch (choice) {
 			case 1:
 				// Experiment 1
-				tree = new BPTree(8); // 100 Bytes
+				tree = new BPTree(11); // 100 Bytes
 				db = new Database(500000000, 200); // 200 Bytes
 				selected = true;
 				exit1 = true;
 				break;
 			case 2:
-				tree = new BPTree(42); // 500 Bytes
+				tree = new BPTree(27); // 500 Bytes
 				db = new Database(500000000, 500); // 500 Bytes
 				selected = true;
 				exit1 = true;
@@ -140,7 +140,9 @@ public class main {
 					case 3:
 						// Experiment 3
 						System.out.println("============================Experiment 3============================");
-						List<Record> searchValues = tree.searchKey(500);
+						System.out.println("Enter search key: ");
+						int searchKey = scan.nextInt();
+						List<Record> searchValues = tree.searchKey(searchKey); //500
 
 						System.out.println("List of tconst: ");
 						for (int j = 0; j < searchValues.size(); j++) {
@@ -163,8 +165,11 @@ public class main {
 					case 4:
 						// Experiment 4
 						System.out.println("============================Experiment 4============================");
-
-						List<Key> searchRange = tree.searchRange(30000, 40000);
+						System.out.println("Enter search key 1: ");
+						int searchKey1 = scan.nextInt();
+						System.out.println("Enter search key 2: ");
+						int searchKey2 = scan.nextInt();
+						List<Key> searchRange = tree.searchRange(searchKey1, searchKey2); //30000,40000
 
 						int x = 0;
 						// System.out.println(searchRange.size());
@@ -193,9 +198,7 @@ public class main {
 						// Experiment 5
 						System.out.println("============================Experiment 5============================");
 						tree.deleteKey(1000);
-						tree.displayTreeInfo();
-						tree.displayHeightInfo();
-						tree.displayUpdatedNodesInfo();
+						tree.displayDeleteInfo();
 						break;
 
 					case 6:

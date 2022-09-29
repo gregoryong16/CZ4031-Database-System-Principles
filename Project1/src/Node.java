@@ -36,6 +36,10 @@ public class Node {
 		}
 	}
 
+	public void resetKeys() {
+		this.keys.clear();
+	}
+
 	// Get List of Children Node
 	public List<Node> getChildren() {
 		return children;
