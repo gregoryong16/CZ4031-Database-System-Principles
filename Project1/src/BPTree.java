@@ -532,11 +532,16 @@ public class BPTree {
 				System.out.println("=Leaf=");
 				System.out.println("Here: " + keys + " | Size: " + keys.size());
 
+				int keyCount = 0;
 				// If key is in leaf node, remove key
-				for (int i = 0; i < keys.size(); i++) {
-					if (keys.get(i).getKey() == key) {
-						keys.remove(i);
+				for (; keyCount < keys.size(); keyCount++) {
+					if (keys.get(keyCount).getKey() == key) {
+						keys.remove(keyCount);
 					}
+				}
+				if(keyCount == keys.size()){
+					System.out.println("Key does not exist");
+					return;
 				}
 
 				List<Node> nodeList = curr.getParent().getChildren();
@@ -747,10 +752,17 @@ public class BPTree {
 					break;
 				}
 				height = levelNumber;
-				System.out.println("\n" + "Printing level " + levelNumber++);
+				levelNumber++;
+				if(rootAndFirst < 2) {
+					System.out.println("\n" + "Printing level " + levelNumber);
+				}
 				continue;
 			}
-			if(rootAndFirst < 2) {
+			if(rootAndFirst == 0) {
+				displayNodeInfo(curr);
+			}
+			else if(rootAndFirst == 1) {
+				System.out.println("Printing First Child Node:");
 				displayNodeInfo(curr);
 			}
 			numOfNodes++;
