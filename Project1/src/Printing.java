@@ -7,7 +7,7 @@ public class Printing {
 	
 	public static void PrintDatabaseInfo(MainMemory _Mm) {
 		System.out.println("################ DATABASE INFO ################");
-		System.out.println("Memory Size: " + _Mm.memPoolSize + " bytes");\
+		System.out.println("Memory Size: " + _Mm.memPoolSize + " bytes");
 		System.out.println("The Size of database: " + _Mm.sumRecSize + (_Mm.ind_N * _Mm.block_size));
 		System.out.println("Block Size: " + _Mm.block_size + " bytes");
 		System.out.println("Record Size: " + _Mm.recordSize + " bytes");
