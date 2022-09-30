@@ -98,7 +98,7 @@ public class main {
 						}
 
 					}
-					System.out.println(recordCounter);
+					System.out.println("Number of Records read: " + recordCounter);
 
 					db.saveRecordIntoMemory(recordCounter);
 					sc.close();
@@ -123,7 +123,7 @@ public class main {
 								// Experiment 1
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
-								int indexNodes = tree.countTreeIndexNodes();
+								int indexNodes = tree.countNumberOfNodes();
 								db.ind_N = indexNodes;
 								Printing Printer = new Printing();
 								Printer.PrintDatabaseInfo(db);
@@ -131,7 +131,9 @@ public class main {
 							case 2:
 								// Experiment 2
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 2~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-								tree.displayTree();
+								tree.printMaxKeysInNode();
+								// tree.displayTree();
+								tree.displayPartialTree();
 								tree.displayHeight();
 								System.out.print("\n");
 								break;
@@ -140,14 +142,15 @@ public class main {
 								// Experiment 3
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 3~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 								System.out.println("Enter search key: ");
-								int searchKey = scan.nextInt();
-								List<Record> searchValues = tree.searchKey(searchKey); //500
+								int search = scan.nextInt();
+								List<Record> recordList = tree.search(search); //500
 
-								System.out.println("List of tconst: ");
-								for (int j = 0; j < searchValues.size(); j++) {
+								System.out.println("List of tconst & corresponding AverageRating: ");
+								float sum=0;
+								for (int j = 0; j < recordList.size(); j++) {
 
-									System.out.print(searchValues.get(j).getTConst() + " ");
-
+									System.out.println(recordList.get(j).getTConst() + " " + recordList.get(j).getAverageRating());
+									sum += recordList.get(j).getAverageRating();
 									if (j % 100 == 0 && j != 0) {
 										System.out.print("\n");
 									}
@@ -155,23 +158,24 @@ public class main {
 								}
 
 								System.out.print("\n");
-								System.out.println("Total Records: " + searchValues.size());
-
 								tree.printIndexNodesAccessed();
 								tree.printDataBlocksAccessed();
+								System.out.println("Total Records: " + recordList.size());
+								System.out.printf("Average of \"averageRating's\" of records: %.1f \n" , (sum/recordList.size()));
+								
 								break;
 
 							case 4:
 								// Experiment 4
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 4~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //								System.out.println("Enter search key 1: ");
-//								int searchKey1 = scan.nextInt();
+//								int search1 = scan.nextInt();
 //								System.out.println("Enter search key 2: ");
-//								int searchKey2 = scan.nextInt();
+//								int search2 = scan.nextInt();
 								System.out.println("===================Part 1: Display Index Block ===================");
-								List<Key> searchRange = tree.searchRange(30000, 40000); //30000,40000
+								List<Key> keyList = tree.search(30000, 40000); //30000,40000
 								tree.printIndexNodesAccessed();
-								tree.printRangeQueries(searchRange);
+								tree.printRangeQueries(keyList);
 								break;
 
 							case 5:
