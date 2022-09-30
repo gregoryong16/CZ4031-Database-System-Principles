@@ -300,8 +300,8 @@ public class BPTree {
 
 		while (curr.getChildren().size() != 0) {
 			indexNodesAccess++;
-			System.out.println("Index Node Access: Node= " + curr.getKeys());
 			curr = curr.getChildren().get(searchInternalNode(minKey, curr.getKeys()));
+			System.out.println("Index Node Access: Node= " + curr.getKeys());
 		}
 
 		// Stop if value encountered in list is greater than key2
@@ -309,14 +309,16 @@ public class BPTree {
 
 		while (null != curr && !endSearch) {
 			for (int i = 0; i < curr.getKeys().size(); i++) {
+				if(curr.getKeys().get(i).getKey() >= minKey && curr.getKeys().get(i).getKey() <= maxKey){
+					dataBlocksAccess++;
+//					System.out.println("Data Block Access: Key=" + curr.getKeys().get(i).getKey()
+//							+ " |\n Value=" + curr.getKeys().get(i).getValues());
+//
+//					System.out.println("Data Block Access: Key= " + curr.getKeys().get(i).getKey());
+//					System.out.println("Value Size= " + curr.getKeys().get(i).getValues().size() + " Records");
+//					System.out.println("Value (0)= " + curr.getKeys().get(i).getValues().get(0));
+				}
 
-				dataBlocksAccess++;
-				// System.out.println("Data Block Access: Key=" + curr.getKeys().get(i).getKey()
-				// + " |\n Value=" + curr.getKeys().get(i).getValues());
-
-				System.out.println("Data Block Access: Key= " + curr.getKeys().get(i).getKey());
-				System.out.println("Value Size= " + curr.getKeys().get(i).getValues().size() + " Records");
-				System.out.println("Value (0)= " + curr.getKeys().get(i).getValues().get(0));
 
 				if (curr.getKeys().get(i).getKey() >= minKey && curr.getKeys().get(i).getKey() <= maxKey)
 					searchKeys.add(curr.getKeys().get(i));
@@ -473,18 +475,18 @@ public class BPTree {
 		numNodesMerged = 0;
 
 		Node curr = this.rootNode;
-
+		int maxKeys = maxPointer-1;
 		// Minimum number of keys to balance the b-tree in the leaf node
-		int minLeafKeys = (int) Math.floor( (maxPointer+1) / 2.0);
+		int minLeafKeys = (int) Math.floor( (maxKeys+1) / 2.0);
 		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
 
 		// Minimum number of keys to balance the b-tree in the non-leaf node
-		int minInternalKeys = (int) Math.floor((maxPointer) / 2.0);
+		int minInternalKeys = (int) Math.floor((maxKeys) / 2.0);
 		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
 
 		// Minimum number of children node to balance the b-tree in the non-leaf node
 //		int minInternalNodeChildren = (int) Math.ceil((maxPointer) / 2.0);
-		int minInternalNodeChildren = 2;
+		int minInternalNodeChildren = minInternalKeys+1;
 		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
 
 		/*
@@ -845,11 +847,40 @@ public class BPTree {
 	}
 
 	public void printIndexNodesAccessed() {
-		System.out.println("Number of Index Nodes Access: " + indexNodesAccess);
+		System.out.println("Number of Index Nodes Access: " + indexNodesAccess + "\n");
 	}
 
 	public void printDataBlocksAccessed() {
 		System.out.println("Number of Data Block Access: " + dataBlocksAccess);
+	}
+
+	public void printRangeQueries(List<Key> searchRange) {
+		int x = 0;
+		int dataBlocks = 0;
+		// System.out.println(searchRange.size());
+		float totalAverageRating = 0;
+		System.out.println("===================Part 2: Display Data Block ===================");
+		for (int j = 0; j < searchRange.size(); j++) {
+			System.out.println("\nnumVotes -> [Key: " + searchRange.get(j).getKey() + "]");
+			dataBlocks++;
+			for (int y = 0; y < searchRange.get(j).getValues().size(); y++) {
+				x++;
+				System.out.print("  tConst: ");
+				System.out.print(searchRange.get(j).getValues().get(y).getTConst() + ",");
+				System.out.print(" Average Rating: " + searchRange.get(j).getValues().get(y).getAverageRating() + "\n");
+				totalAverageRating += searchRange.get(j).getValues().get(y).getAverageRating();
+				if (y % 100 == 0 && y != 0) {
+					System.out.print("\n");
+				}
+
+			}
+			// System.out.print("\n");
+		}
+
+		System.out.println("\nTotal Data Blocks: " + dataBlocks);
+		System.out.println("\n===================Part 3: Average of 'avgRatings' ===================");
+		System.out.println("Total Records: " + x);
+		System.out.printf("Average of avgRatings: %.1f\n\n",totalAverageRating/x);
 	}
 
 }
