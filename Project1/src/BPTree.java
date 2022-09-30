@@ -272,8 +272,8 @@ public class BPTree {
 			if (key == keyList.get(i).getKey()) {
 
 				System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
-				System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
-				System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+				// System.out.println("Number of records=" + keyList.get(i).getValues().size() + " Records");
+				// System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
 				dataBlocksAccess++;
 
 				searchValues = keyList.get(i).getValues();
@@ -366,6 +366,7 @@ public class BPTree {
 		return countIndexNodes;
 	}
 
+	
 	// 3: Deletion Functions
 //	// Test 1: Remove Key
 //	public void removeKey(int key) {
@@ -811,11 +812,64 @@ public class BPTree {
 		displayHeight();
 	}
 
+	public void displayPartialTree(){
+		int numOfNodes = 0;
+		totalRecordsCount = 0;
+		nodeRecordCount = 0;
+		height = 0;
+		uniqueKeysCount = 1;
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.add(this.rootNode);
+		queue.add(null);
+		Node curr = null;
+		int levelNumber = 2;
+		System.out.println("Printing level 1 (Root)");
+		int rootAndFirst = 0;
+		while (!queue.isEmpty()) {
+			curr = queue.poll();
+			if (null == curr) {
+				queue.add(null);
+				if (queue.peek() == null) {
+					break;
+				}
+				height = levelNumber;
+				levelNumber++;
+				if(rootAndFirst < 2) {
+					System.out.println("\n" + "Printing level " + (levelNumber-1));
+				}
+				continue;
+			}
+			if(rootAndFirst == 0) {
+				displayNode(curr);
+			}
+			else if(rootAndFirst == 1) {
+				System.out.println("Printing First Child Node:");
+				displayNode(curr);
+			}
+			numOfNodes++;
+
+			if (curr.getChildren().isEmpty()) {
+				break;
+			}
+			for (int i = 0; i < curr.getChildren().size(); i++) {
+				queue.add(curr.getChildren().get(i));
+			}
+			rootAndFirst++;
+		}
+
+		curr = curr.getNext();
+		while (null != curr) {
+			numOfNodes++;
+			curr = curr.getNext();
+		}
+		System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
+	}
+
 	private void displayNode(Node curr) {
 
 		for (int i = 0; i < curr.getKeys().size(); i++) {
 			nodeRecordCount = 0;
-			System.out.print(curr.getKeys().get(i).getKey() + ":(");
+			System.out.print(curr.getKeys().get(i).getKey() + ":[");
 			String values = "";
 			for (int j = 0; j < curr.getKeys().get(i).getValues().size(); j++) {
 				values = values + curr.getKeys().get(i).getValues().get(j) + ",";
@@ -835,11 +889,11 @@ public class BPTree {
 			// ");\n");
 			// System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
 			// nodeRecordCount + ");");
-			System.out.print(values.isEmpty() ? ");" : nodeRecordCount + ");");
+			System.out.print(values.isEmpty() ? "], " : nodeRecordCount + "], ");
 		}
 
 		if (curr.getKeys().size() != 0) {
-			System.out.print("||");
+			System.out.print("\n");
 		}
 
 	}
@@ -851,5 +905,12 @@ public class BPTree {
 	public void printDataBlocksAccessed() {
 		System.out.println("Number of Data Block Access: " + dataBlocksAccess);
 	}
+	
+	public void printMaxKeysInNode() {
+		System.out.println("Paramater n of Tree(Max Number of keys in a Node) " + (maxPointer - 1));
+	}
 
+	public void printNumberOfNodes() {
+		System.out.println("Number of Nodes in Tree " + numNodes);
+	}
 }

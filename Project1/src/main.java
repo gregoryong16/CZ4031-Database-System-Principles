@@ -31,13 +31,13 @@ public class main {
 			switch (choice) {
 				case 1:
 					// Experiment 1
-					tree = new BPTree(11); // 100 Bytes
+					tree = new BPTree(12); // 100 Bytes
 					db = new MainMemory(500000000, 200); // 200 Bytes
 					selected = true;
 //					exit1 = true;
 					break;
 				case 2:
-					tree = new BPTree(27); // 500 Bytes
+					tree = new BPTree(28); // 500 Bytes
 					db = new MainMemory(500000000, 500); // 500 Bytes
 					selected = true;
 //					exit1 = true;
@@ -81,7 +81,7 @@ public class main {
 
 							db.AllocateRecordToPool(rec);
 
-							if (recordCounter % db.recordsPerBlock == 0) {
+							if (recordCounter % db.recPerBlock == 0) {
 								// System.out.println("i index: " + recordCounter);
 								newBlk = new Block();
 							}
@@ -98,7 +98,7 @@ public class main {
 						}
 
 					}
-					System.out.println(recordCounter);
+					System.out.println("Number of Records read: " + recordCounter);
 
 					db.saveRecordIntoMemory(recordCounter);
 					sc.close();
@@ -124,14 +124,16 @@ public class main {
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 								int indexNodes = tree.countTreeIndexNodes();
-								db.indexNodes = indexNodes;
+								db.ind_N = indexNodes;
 								Printing Printer = new Printing();
 								Printer.PrintDatabaseInfo(db);
 								break;
 							case 2:
 								// Experiment 2
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 2~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-								tree.displayTree();
+								tree.printMaxKeysInNode();
+								// tree.displayTree();
+								tree.displayPartialTree();
 								tree.displayHeight();
 								System.out.print("\n");
 								break;
@@ -144,10 +146,12 @@ public class main {
 								List<Record> searchValues = tree.searchKey(searchKey); //500
 
 								System.out.println("List of tconst: ");
+								float sum=0;
 								for (int j = 0; j < searchValues.size(); j++) {
 
 									System.out.print(searchValues.get(j).getTConst() + " ");
-
+									System.out.println(searchValues.get(j).getAverageRating());
+									sum += searchValues.get(j).getAverageRating();
 									if (j % 100 == 0 && j != 0) {
 										System.out.print("\n");
 									}
@@ -155,10 +159,12 @@ public class main {
 								}
 
 								System.out.print("\n");
-								System.out.println("Total Records: " + searchValues.size());
-
 								tree.printIndexNodesAccessed();
 								tree.printDataBlocksAccessed();
+								System.out.print("\n");
+								System.out.println("Total Records: " + searchValues.size());
+								System.out.printf("Average of \"averageRating's\" of records: %.1f \n" , (sum/searchValues.size()));
+								
 								break;
 
 							case 4:
