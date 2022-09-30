@@ -29,28 +29,28 @@ public class main {
 			int choice = scan.nextInt();
 
 			switch (choice) {
-			case 1:
-				// Experiment 1
-				tree = new BPTree(11); // 100 Bytes
-				db = new MainMemory(500000000, 200); // 200 Bytes
-				selected = true;
-				exit1 = true;
-				break;
-			case 2:
-				tree = new BPTree(27); // 500 Bytes
-				db = new MainMemory(500000000, 500); // 500 Bytes
-				selected = true;
-				exit1 = true;
-				break;
-			case 3:
-				scan.close();
-				exit1 = true;
-				break;
+				case 1:
+					// Experiment 1
+					tree = new BPTree(11); // 100 Bytes
+					db = new MainMemory(500000000, 200); // 200 Bytes
+					selected = true;
+//					exit1 = true;
+					break;
+				case 2:
+					tree = new BPTree(27); // 500 Bytes
+					db = new MainMemory(500000000, 500); // 500 Bytes
+					selected = true;
+//					exit1 = true;
+					break;
+				case 3:
+					scan.close();
+					exit1 = true;
+					break;
 
-			default:
-				scan.close();
-				exit1 = true;
-				break;
+//			default:
+//				scan.close();
+//				exit1 = true;
+//				break;
 			}
 
 			if (selected == true && choice != 3) {
@@ -80,7 +80,15 @@ public class main {
 									Integer.parseInt(String.valueOf(input[2])));
 
 							db.AllocateRecordToPool(rec);
+
+							if (recordCounter % db.recordsPerBlock == 0) {
+								// System.out.println("i index: " + recordCounter);
+								newBlk = new Block();
+							}
+
 							db.AddBlock(newBlk, rec);
+
+							tree.insertKey(Integer.parseInt(String.valueOf(input[2])), rec);
 
 							recordCounter++;
 							/*
@@ -90,58 +98,41 @@ public class main {
 						}
 
 					}
+					System.out.println(recordCounter);
 
-				}
-				System.out.println(recordCounter);
+					db.saveRecordIntoMemory(recordCounter);
+					sc.close();
+					System.out.println("[Done Loading]");
 
-				db.saveRecordIntoMemory(recordCounter);
-				sc.close();
-				System.out.println("[Done Loading]");
+					// 4: Main Menu
+					boolean exit = false;
+					do {
 
-				// 4: Main Menu
-				boolean exit = false;
-				do {
+						System.out.println("============================Experiments============================");
+						System.out.println("1: Database Info");
+						System.out.println("2: B+ Tree Info");
+						System.out.println("3: Search Key with numVotes of 500");
+						System.out.println("4: Search Key Range with numVotes of 30000 to 40000");
+						System.out.println("5: Delete Key with numVotes of 1000");
+						System.out.println("6: Quit");
+//						Scanner scan = new Scanner(System.in);
+						int choice1 = scan.nextInt();
 
-					System.out.println("============================Experiments============================");
-					System.out.println("1: Database Info");
-					System.out.println("2: B+ Tree Info");
-					System.out.println("3: Search Key with numVotes of 500");
-					System.out.println("4: Search Key Range with numVotes of 30000 to 40000");
-					System.out.println("5: Delete Key with numVotes of 1000");
-					System.out.println("6: Quit");
-					Scanner scan = new Scanner(System.in);
-					int choice = scan.nextInt();
+						switch (choice1) {
+							case 1:
+								// Experiment 1
+								System.out.println("============================Experiment 1============================");
 
-					switch (choice) {
-					case 1:
-						// Experiment 1
-						System.out.println("============================Experiment 1============================");
-
-						int indexNodes = tree.countTreeIndexNodes();
-						db.indexNodes = indexNodes;
-						Printing.PrintDatabaseInfo(db);
-						break;
-					case 2:
-						// Experiment 2
-						System.out.println("============================Experiment 2============================");
-						tree.displayTreeInfo();
-						tree.displayHeightInfo();
-						System.out.print("\n");
-						break;
-
-					case 3:
-						// Experiment 3
-						System.out.println("============================Experiment 3============================");
-						System.out.println("Enter search key: ");
-						int searchKey = scan.nextInt();
-						List<Record> searchValues = tree.searchKey(searchKey); //500
-
-						System.out.println("List of tconst: ");
-						for (int j = 0; j < searchValues.size(); j++) {
-
-							System.out.print(searchValues.get(j).getTConst() + " ");
-
-							if (j % 100 == 0 && j != 0) {
+								int indexNodes = tree.countTreeIndexNodes();
+								db.indexNodes = indexNodes;
+								Printing Printer = new Printing();
+								Printer.PrintDatabaseInfo(db);
+								break;
+							case 2:
+								// Experiment 2
+								System.out.println("============================Experiment 2============================");
+								tree.displayTreeInfo();
+								tree.displayHeightInfo();
 								System.out.print("\n");
 								break;
 
