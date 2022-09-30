@@ -816,7 +816,7 @@ public class BPTree {
 
 		for (int i = 0; i < curr.getKeys().size(); i++) {
 			recordsCountInANode = 0;
-			System.out.print("||" + curr.getKeys().get(i).getKey() + ":(");
+			System.out.print(curr.getKeys().get(i).getKey() + ":(");
 			String values = "";
 			for (int j = 0; j < curr.getKeys().get(i).getValues().size(); j++) {
 				values = values + curr.getKeys().get(i).getValues().get(j) + ",";
