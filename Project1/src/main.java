@@ -29,7 +29,6 @@ public class main {
 			int choice = scan.nextInt();
 
 			switch (choice) {
-<<<<<<< HEAD
 			case 1:
 				// Experiment 1
 				tree = new BPTree(11); // 100 Bytes
@@ -52,30 +51,6 @@ public class main {
 				scan.close();
 				exit1 = true;
 				break;
-=======
-				case 1:
-					// Experiment 1
-					tree = new BPTree(11); // 100 Bytes
-					db = new Database(500000000, 200); // 200 Bytes
-					selected = true;
-//					exit1 = true;
-					break;
-				case 2:
-					tree = new BPTree(27); // 500 Bytes
-					db = new Database(500000000, 500); // 500 Bytes
-					selected = true;
-//					exit1 = true;
-					break;
-				case 3:
-					scan.close();
-					exit1 = true;
-					break;
-
-//			default:
-//				scan.close();
-//				exit1 = true;
-//				break;
->>>>>>> jw-branch
 			}
 
 			if (selected == true && choice != 3) {
@@ -104,24 +79,8 @@ public class main {
 							Record rec = new Record(input[0], Integer.parseInt(String.valueOf(input[2])),
 									Integer.parseInt(String.valueOf(input[2])));
 
-							db.allocateRecord(rec);
-
-<<<<<<< HEAD
-						db.AllocateRecordToPool(rec);
-=======
-							if (recordCounter % db.recordsPerBlock == 0) {
-								// System.out.println("i index: " + recordCounter);
-								newBlk = new Block();
-							}
->>>>>>> jw-branch
-
-							db.allocateBlock(newBlk, rec);
-
-<<<<<<< HEAD
-						db.AddBlock(newBlk, rec);
-=======
-							tree.insertKey(Integer.parseInt(String.valueOf(input[2])), rec);
->>>>>>> jw-branch
+							db.AllocateRecordToPool(rec);
+							db.AddBlock(newBlk, rec);
 
 							recordCounter++;
 							/*
@@ -131,7 +90,6 @@ public class main {
 						}
 
 					}
-<<<<<<< HEAD
 
 				}
 				System.out.println(recordCounter);
@@ -184,42 +142,6 @@ public class main {
 							System.out.print(searchValues.get(j).getTConst() + " ");
 
 							if (j % 100 == 0 && j != 0) {
-=======
-					System.out.println(recordCounter);
-
-					db.setRecord(recordCounter);
-					sc.close();
-					System.out.println("[Done Loading]");
-
-					// 4: Main Menu
-					boolean exit = false;
-					do {
-
-						System.out.println("============================Experiments============================");
-						System.out.println("1: Database Info");
-						System.out.println("2: B+ Tree Info");
-						System.out.println("3: Search Key with numVotes of 500");
-						System.out.println("4: Search Key Range with numVotes of 30000 to 40000");
-						System.out.println("5: Delete Key with numVotes of 1000");
-						System.out.println("6: Quit");
-//						Scanner scan = new Scanner(System.in);
-						int choice1 = scan.nextInt();
-
-						switch (choice1) {
-							case 1:
-								// Experiment 1
-								System.out.println("============================Experiment 1============================");
-
-								int indexNodes = tree.countTreeIndexNodes();
-								db.indexNodes = indexNodes;
-								db.printDatabaseInfo();
-								break;
-							case 2:
-								// Experiment 2
-								System.out.println("============================Experiment 2============================");
-								tree.displayTreeInfo();
-								tree.displayHeightInfo();
->>>>>>> jw-branch
 								System.out.print("\n");
 								break;
 
