@@ -81,7 +81,7 @@ public class main {
 
 							db.AllocateRecordToPool(rec);
 
-							if (recordCounter % db.recordsPerBlock == 0) {
+							if (recordCounter % db.recPerBlock == 0) {
 								// System.out.println("i index: " + recordCounter);
 								newBlk = new Block();
 							}
@@ -124,7 +124,7 @@ public class main {
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 								int indexNodes = tree.countTreeIndexNodes();
-								db.indexNodes = indexNodes;
+								db.ind_N = indexNodes;
 								Printing Printer = new Printing();
 								Printer.PrintDatabaseInfo(db);
 								break;
