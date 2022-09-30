@@ -21,9 +21,9 @@ public class main {
 		boolean selected = false;
 		do {
 
-			System.out.println("============================Select Byte Size============================");
-			System.out.println("1: Select 200 Bytes");
-			System.out.println("2: Select 500 Bytes");
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Select Byte Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("1: 200 Bytes");
+			System.out.println("2: 500 Bytes");
 			System.out.println("3: Quit");
 			Scanner scan = new Scanner(System.in);
 			int choice = scan.nextInt();
@@ -63,7 +63,7 @@ public class main {
 					int recordCounter = 0;
 					// int i = 0;
 
-					System.out.println("[Reading File]");
+					System.out.println("[Loading File]...");
 					while (sc.hasNextLine()) {
 
 						if (recordCounter == 0) {
@@ -108,20 +108,20 @@ public class main {
 					boolean exit = false;
 					do {
 
-						System.out.println("============================Experiments============================");
-						System.out.println("1: Database Info");
+						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Experiments ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+						System.out.println("1: Main Memory Info");
 						System.out.println("2: B+ Tree Info");
-						System.out.println("3: Search Key with numVotes of 500");
-						System.out.println("4: Search Key Range with numVotes of 30000 to 40000");
-						System.out.println("5: Delete Key with numVotes of 1000");
-						System.out.println("6: Quit");
+						System.out.println("3: Search Key with numVotes = 500");
+						System.out.println("4: Range Query for Key with numVotes between 30000 and 40000");
+						System.out.println("5: Delete Key with numVotes = 1000");
+						System.out.println("6: Return to Byte Selection Menu");
 //						Scanner scan = new Scanner(System.in);
 						int choice1 = scan.nextInt();
 
 						switch (choice1) {
 							case 1:
 								// Experiment 1
-								System.out.println("============================Experiment 1============================");
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 								int indexNodes = tree.countTreeIndexNodes();
 								db.indexNodes = indexNodes;
@@ -130,15 +130,15 @@ public class main {
 								break;
 							case 2:
 								// Experiment 2
-								System.out.println("============================Experiment 2============================");
-								tree.displayTreeInfo();
-								tree.displayHeightInfo();
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 2~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+								tree.displayTree();
+								tree.displayHeight();
 								System.out.print("\n");
 								break;
 
 							case 3:
 								// Experiment 3
-								System.out.println("============================Experiment 3============================");
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 3~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 								System.out.println("Enter search key: ");
 								int searchKey = scan.nextInt();
 								List<Record> searchValues = tree.searchKey(searchKey); //500
@@ -157,13 +157,13 @@ public class main {
 								System.out.print("\n");
 								System.out.println("Total Records: " + searchValues.size());
 
-								tree.printIndexNodeAccess();
-								tree.printDataBlockAccess();
+								tree.printIndexNodesAccessed();
+								tree.printDataBlocksAccessed();
 								break;
 
 							case 4:
 								// Experiment 4
-								System.out.println("============================Experiment 4============================");
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 4~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 								System.out.println("Enter search key 1: ");
 								int searchKey1 = scan.nextInt();
 								System.out.println("Enter search key 2: ");
@@ -189,13 +189,13 @@ public class main {
 
 								System.out.println("Total Records: " + x);
 
-								tree.printIndexNodeAccess();
-								tree.printDataBlockAccess();
+								tree.printIndexNodesAccessed();
+								tree.printDataBlocksAccessed();
 								break;
 
 							case 5:
 								// Experiment 5
-								System.out.println("============================Experiment 5============================");
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 5~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 								tree.deleteKey(1000);
 								tree.displayDeleteInfo();
 								break;
@@ -215,7 +215,7 @@ public class main {
 
 					/*
 					 * System.out.
-					 * println("============================FIELD INFO============================"
+					 * println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~FIELD INFO~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 					 * ); System.out.println("Size of byte: " + (Byte.SIZE/8) + " bytes.");
 					 * System.out.println("Size of short: " + (Short.SIZE/8) + " bytes.");
 					 * System.out.println("Size of int: " + (Integer.SIZE/8) + " bytes.");
@@ -290,7 +290,7 @@ public class main {
 //				boolean exit = false;
 //				do {
 //
-//					System.out.println("============================Experiments============================");
+//					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiments~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //					System.out.println("1: Database Info");
 //					System.out.println("2: B+ Tree Info");
 //					System.out.println("3: Search Key with numVotes of 500");
@@ -303,7 +303,7 @@ public class main {
 //					switch (choice) {
 //					case 1:
 //						// Experiment 1
-//						System.out.println("============================Experiment 1============================");
+//						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //
 //						int indexNodes = tree.countTreeIndexNodes();
 //						db.indexNodes = indexNodes;
@@ -311,15 +311,15 @@ public class main {
 //						break;
 //					case 2:
 //						// Experiment 2
-//						System.out.println("============================Experiment 2============================");
-//						tree.displayTreeInfo();
-//						tree.displayHeightInfo();
+//						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 2~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//						tree.displayTree();
+//						tree.displayHeight();
 //						System.out.print("\n");
 //						break;
 //
 //					case 3:
 //						// Experiment 3
-//						System.out.println("============================Experiment 3============================");
+//						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 3~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //						System.out.println("Enter search key: ");
 //						int searchKey = scan.nextInt();
 //						List<Record> searchValues = tree.searchKey(searchKey); //500
@@ -338,13 +338,13 @@ public class main {
 //						System.out.print("\n");
 //						System.out.println("Total Records: " + searchValues.size());
 //
-//						tree.printIndexNodeAccess();
-//						tree.printDataBlockAccess();
+//						tree.printIndexNodesAccessed();
+//						tree.printDataBlocksAccessed();
 //						break;
 //
 //					case 4:
 //						// Experiment 4
-//						System.out.println("============================Experiment 4============================");
+//						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 4~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //						System.out.println("Enter search key 1: ");
 //						int searchKey1 = scan.nextInt();
 //						System.out.println("Enter search key 2: ");
@@ -370,13 +370,13 @@ public class main {
 //
 //						System.out.println("Total Records: " + x);
 //
-//						tree.printIndexNodeAccess();
-//						tree.printDataBlockAccess();
+//						tree.printIndexNodesAccessed();
+//						tree.printDataBlocksAccessed();
 //						break;
 //
 //					case 5:
 //						// Experiment 5
-//						System.out.println("============================Experiment 5============================");
+//						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 5~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 //						tree.deleteKey(1000);
 //						tree.displayDeleteInfo();
 //						break;
@@ -396,7 +396,7 @@ public class main {
 //
 //				/*
 //				 * System.out.
-//				 * println("============================FIELD INFO============================"
+//				 * println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~FIELD INFO~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 //				 * ); System.out.println("Size of byte: " + (Byte.SIZE/8) + " bytes.");
 //				 * System.out.println("Size of short: " + (Short.SIZE/8) + " bytes.");
 //				 * System.out.println("Size of int: " + (Integer.SIZE/8) + " bytes.");

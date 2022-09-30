@@ -6,53 +6,52 @@ import java.util.Queue;
 public class BPTree {
 
 	// B+ Tree Info
-	private int m;
-	private Node root;
+	private int maxPointer;
+	private Node rootNode;
 	private int height = 0;
 
 	// For Experiment Purposes
 	private int numNodes = 0;
-	private int numDeleted = 0;
-	private int numMerged = 0;
+	private int numNodesDeleted = 0;
+	private int numNodesMerged = 0;
 	private int indexNodesAccess = 0;
 	private int dataBlocksAccess = 0;
 	private int uniqueKeysCount = 1;
-	private int recordsCountInANode = 0;
-	private int recordsCountTotal = 0;
-	private int numOfNodes = 0;
+	private int nodeRecordCount = 0;
+	private int totalRecordsCount = 0;
 
 	public BPTree(int order) {
-		this.m = order; // Set B+ Tree M value
-		this.root = null; // Set Root Node to null on default
+		this.maxPointer = order; // Set B+ Tree M value
+		this.rootNode = null; // Set Root Node to null on default
 	}
 
 	// 1: Insertion Functions
 	public void insertKey(int key, Record value) {
 		// 1: Empty B+ Tree => Create New Root Node
-		if (null == this.root) {
+		if (null == this.rootNode) {
 			Node newNode = new Node();
 			newNode.getKeys().add(new Key(key, value));
-			this.root = newNode;
-			this.root.isLeaf = true;
-			this.root.setParent(null); // Since the root has no parent, parent set to null
-		} else if (this.root.getChildren().isEmpty() && this.root.getKeys().size() < (this.m - 1)) {
+			this.rootNode = newNode;
+			this.rootNode.isLeaf = true;
+			this.rootNode.setParent(null); // Since the rootNode has no parent, parent set to null
+		} else if (this.rootNode.getChildren().isEmpty() && this.rootNode.getKeys().size() < (this.maxPointer - 1)) {
 			// 2: Node is Not Full
-			this.root.isLeaf = false;
-			insertExternalNode(key, value, this.root);
+			this.rootNode.isLeaf = false;
+			insertLeafNode(key, value, this.rootNode);
 		} else {
 			// 3: Normal insert
-			Node curr = this.root;
+			Node curr = this.rootNode;
 
 			// Traverse to the last leaf node
 			while (!curr.getChildren().isEmpty()) {
 				curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
 			}
 
-			insertExternalNode(key, value, curr);
+			insertLeafNode(key, value, curr);
 
 			// External node is full => Split node
-			if (curr.getKeys().size() == this.m) {
-				splitExternalNode(curr, this.m);
+			if (curr.getKeys().size() == this.maxPointer) {
+				splitLeafNode(curr, this.maxPointer);
 			}
 		}
 
@@ -61,7 +60,7 @@ public class BPTree {
 
 	}
 
-	private void insertExternalNode(int key, Record value, Node node) {
+	private void insertLeafNode(int key, Record value, Node node) {
 		// Find index of key to be inserted
 		int index = searchInternalNode(key, node.getKeys());
 
@@ -77,13 +76,13 @@ public class BPTree {
 		}
 	}
 
-	private void splitExternalNode(Node curr, int m) {
+	private void splitLeafNode(Node curr, int maxPointer) {
 
 		// Set isLeaf of External Node
 		curr.isLeaf = true;
 
 		// Find the middle index
-		int midIndex = m / 2;
+		int midIndex = maxPointer / 2;
 
 		Node middleNode = new Node();
 		Node rightNode = new Node();
@@ -101,16 +100,16 @@ public class BPTree {
 		curr.getKeys().subList(midIndex, curr.getKeys().size()).clear();
 
 		boolean split = true;
-		splitInternalNode(curr.getParent(), curr, m, middleNode, split);
+		splitInternalNode(curr.getParent(), curr, maxPointer, middleNode, split);
 
 	}
 
-	private void splitInternalNode(Node curr, Node prevNode, int m, Node insertedNode, boolean split) {
+	private void splitInternalNode(Node curr, Node prevNode, int maxPointer, Node insertedNode, boolean split) {
 
 		// If current node is null
 		if (null == curr) {
-			// Set new root
-			this.root = insertedNode;
+			// Set new rootNode
+			this.rootNode = insertedNode;
 
 			// Find where the child has to be inserted
 			int prevIndex = searchInternalNode(prevNode.getKeys().get(0).getKey(), insertedNode.getKeys());
@@ -131,8 +130,8 @@ public class BPTree {
 			mergeInternalNodes(insertedNode, curr);
 
 			// Split if internal node is full
-			if (curr.getKeys().size() == m) {
-				int midIndex = (int) Math.ceil(m / 2.0) - 1;
+			if (curr.getKeys().size() == maxPointer) {
+				int midIndex = (int) Math.ceil(maxPointer / 2.0) - 1;
 				Node middleNode = new Node();
 				Node rightNode = new Node();
 
@@ -166,44 +165,44 @@ public class BPTree {
 				curr.getChildren().subList(leftChild + 1, currChildren.size()).clear();
 				curr.getKeys().subList(midIndex, curr.getKeys().size()).clear();
 
-				splitInternalNode(curr.getParent(), curr, m, middleNode, false);
+				splitInternalNode(curr.getParent(), curr, maxPointer, middleNode, false);
 			}
 		}
 	}
 
-	private void mergeInternalNodes(Node nodeFrom, Node nodeTo) {
-		Key keyFromInserted = nodeFrom.getKeys().get(0);
-		Node childFromInserted = nodeFrom.getChildren().get(0);
+	private void mergeInternalNodes(Node srcNode, Node destNode) {
+		Key keyFromInserted = srcNode.getKeys().get(0);
+		Node childFromInserted = srcNode.getChildren().get(0);
 
 		// Find the index where the key has to be inserted
-		int indexToBeInsertedAt = searchInternalNode(keyFromInserted.getKey(), nodeTo.getKeys());
+		int indexToBeInsertedAt = searchInternalNode(keyFromInserted.getKey(), destNode.getKeys());
 		int childInsertPos = indexToBeInsertedAt;
 		if (keyFromInserted.getKey() <= childFromInserted.getKeys().get(0).getKey()) {
 			childInsertPos = indexToBeInsertedAt + 1;
 		}
 
-		childFromInserted.setParent(nodeTo);
-		nodeTo.getChildren().add(childInsertPos, childFromInserted);
-		nodeTo.getKeys().add(indexToBeInsertedAt, keyFromInserted);
+		childFromInserted.setParent(destNode);
+		destNode.getChildren().add(childInsertPos, childFromInserted);
+		destNode.getKeys().add(indexToBeInsertedAt, keyFromInserted);
 
 		// Update Linked List of external nodes
-		if (!nodeTo.getChildren().isEmpty() && nodeTo.getChildren().get(0).getChildren().isEmpty()) {
+		if (!destNode.getChildren().isEmpty() && destNode.getChildren().get(0).getChildren().isEmpty()) {
 
-			if (nodeTo.getChildren().size() - 1 != childInsertPos
-					&& nodeTo.getChildren().get(childInsertPos + 1).getPrev() == null) {
-				nodeTo.getChildren().get(childInsertPos + 1).setPrev(nodeTo.getChildren().get(childInsertPos));
-				nodeTo.getChildren().get(childInsertPos).setNext(nodeTo.getChildren().get(childInsertPos + 1));
-			} else if (0 != childInsertPos && nodeTo.getChildren().get(childInsertPos - 1).getNext() == null) {
-				nodeTo.getChildren().get(childInsertPos).setPrev(nodeTo.getChildren().get(childInsertPos - 1));
-				nodeTo.getChildren().get(childInsertPos - 1).setNext(nodeTo.getChildren().get(childInsertPos));
+			if (destNode.getChildren().size() - 1 != childInsertPos
+					&& destNode.getChildren().get(childInsertPos + 1).getPrev() == null) {
+				destNode.getChildren().get(childInsertPos + 1).setPrev(destNode.getChildren().get(childInsertPos));
+				destNode.getChildren().get(childInsertPos).setNext(destNode.getChildren().get(childInsertPos + 1));
+			} else if (0 != childInsertPos && destNode.getChildren().get(childInsertPos - 1).getNext() == null) {
+				destNode.getChildren().get(childInsertPos).setPrev(destNode.getChildren().get(childInsertPos - 1));
+				destNode.getChildren().get(childInsertPos - 1).setNext(destNode.getChildren().get(childInsertPos));
 			} else {
 				// Merge is in between, then the next and the previous element's prev and next
 				// pointers have to be updated
-				nodeTo.getChildren().get(childInsertPos)
-						.setNext(nodeTo.getChildren().get(childInsertPos - 1).getNext());
-				nodeTo.getChildren().get(childInsertPos).getNext().setPrev(nodeTo.getChildren().get(childInsertPos));
-				nodeTo.getChildren().get(childInsertPos - 1).setNext(nodeTo.getChildren().get(childInsertPos));
-				nodeTo.getChildren().get(childInsertPos).setPrev(nodeTo.getChildren().get(childInsertPos - 1));
+				destNode.getChildren().get(childInsertPos)
+						.setNext(destNode.getChildren().get(childInsertPos - 1).getNext());
+				destNode.getChildren().get(childInsertPos).getNext().setPrev(destNode.getChildren().get(childInsertPos));
+				destNode.getChildren().get(childInsertPos - 1).setNext(destNode.getChildren().get(childInsertPos));
+				destNode.getChildren().get(childInsertPos).setPrev(destNode.getChildren().get(childInsertPos - 1));
 			}
 		}
 
@@ -252,7 +251,7 @@ public class BPTree {
 
 		List<Record> searchValues = null;
 
-		Node curr = this.root;
+		Node curr = this.rootNode;
 		indexNodesAccess++;
 		System.out.println("Index Node Access: Node= " + curr.getKeys());
 
@@ -294,7 +293,7 @@ public class BPTree {
 		indexNodesAccess = 0;
 		dataBlocksAccess = 0;
 		List<Key> searchKeys = new ArrayList<>();
-		Node curr = this.root;
+		Node curr = this.rootNode;
 
 		indexNodesAccess++;
 		System.out.println("Index Node Access: Node= " + curr.getKeys());
@@ -335,7 +334,7 @@ public class BPTree {
 		int countIndexNodes = 0;
 		
 		Queue<Node> queue = new LinkedList<Node>();
-		queue.add(this.root);
+		queue.add(this.rootNode);
 		queue.add(null);
 		Node curr = null;
 		
@@ -372,21 +371,21 @@ public class BPTree {
 //	public void removeKey(int key) {
 //
 //		// Reset
-//		numDeleted = 0;
-//		numMerged = 0;
+//		numNodesDeleted = 0;
+//		numNodesMerged = 0;
 //
-//		Node curr = this.root;
+//		Node curr = this.rootNode;
 //
 //		// Minimum number of keys to balance the b-tree in the leaf node
-//		int minLeafKeys = (int) Math.floor(m / 2.0);
+//		int minLeafKeys = (int) Math.floor(maxPointer / 2.0);
 //		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
 //
 //		// Minimum number of keys to balance the b-tree in the non-leaf node
-//		int minInternalKeys = (int) Math.floor((m - 1) / 2.0);
+//		int minInternalKeys = (int) Math.floor((maxPointer - 1) / 2.0);
 //		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
 //
 //		// Minimum number of children node to balance the b-tree in the non-leaf node
-//		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
+//		int minInternalNodeChildren = (int) Math.ceil((maxPointer) / 2.0);
 //		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
 //
 //		while (curr.getChildren().size() != 0) {
@@ -438,7 +437,7 @@ public class BPTree {
 //					}
 //				}
 //
-//				// 1: If node has less than ceil(m/2):
+//				// 1: If node has less than ceil(maxPointer/2):
 //				if (keys.size() < minLeafKeys) {
 //					System.out.println("Not enough keys in node");
 //					System.out.println("Parent: " + curr.getParent());
@@ -470,32 +469,32 @@ public class BPTree {
 	public void deleteKey(int key) {
 
 		// Reset
-		numDeleted = 0;
-		numMerged = 0;
+		numNodesDeleted = 0;
+		numNodesMerged = 0;
 
-		Node curr = this.root;
+		Node curr = this.rootNode;
 
 		// Minimum number of keys to balance the b-tree in the leaf node
-		int minLeafKeys = (int) Math.floor( (m+1) / 2.0);
+		int minLeafKeys = (int) Math.floor( (maxPointer+1) / 2.0);
 		System.out.println("Minimum number of keys in the leaf node: " + minLeafKeys);
 
 		// Minimum number of keys to balance the b-tree in the non-leaf node
-		int minInternalKeys = (int) Math.floor((m) / 2.0);
+		int minInternalKeys = (int) Math.floor((maxPointer) / 2.0);
 		System.out.println("Minimum number of keys in the non-leaf node: " + minInternalKeys);
 
 		// Minimum number of children node to balance the b-tree in the non-leaf node
-//		int minInternalNodeChildren = (int) Math.ceil((m) / 2.0);
+//		int minInternalNodeChildren = (int) Math.ceil((maxPointer) / 2.0);
 		int minInternalNodeChildren = 2;
 		System.out.println("Minimum number of children in the non-leaf node: " + minInternalNodeChildren);
 
 		/*
 		 * if(curr.getChildren().isEmpty()) { List<Key> keys = curr.getKeys();
 		 * 
-		 * //If key is a root node, remove key for(int i = 0; i < keys.size(); i++) {
+		 * //If key is a rootNode node, remove key for(int i = 0; i < keys.size(); i++) {
 		 * if(keys.get(i).getKey() == key) { System.out.println("Removed");
 		 * keys.remove(i); } }
 		 * 
-		 * // if key size is more than 1 keys required in root node if(keys.size() > 1)
+		 * // if key size is more than 1 keys required in rootNode node if(keys.size() > 1)
 		 * { return; } if(keys.size() == 1) }
 		 */
 
@@ -555,7 +554,7 @@ public class BPTree {
 					}
 				}
 
-				// 1: If node has less than ceil(m+1/2):
+				// 1: If node has less than ceil(maxPointer+1/2):
 				if (keys.size() < minLeafKeys) {
 					System.out.println("Not enough keys in node");
 					System.out.println("Parent: " + curr.getParent());
@@ -632,8 +631,8 @@ public class BPTree {
 							insert logic for merging. Left node always merge with right node, so all keys and pointers will shift to left node
 							Need to propagate changes to parent node
 							 */
-							numDeleted++;
-							numMerged++;
+							numNodesDeleted++;
+							numNodesMerged++;
 						}
 
 					}
@@ -694,28 +693,28 @@ public class BPTree {
 
 	// 4: Display Functions
 	public void displayUpdatedNodesInfo() {
-		System.out.println("The total number of deleted nodes is " + numDeleted);
-		System.out.println("The total number of merged nodes is " + numMerged);
+		System.out.println("The total number of deleted nodes is " + numNodesDeleted);
+		System.out.println("The total number of merged nodes is " + numNodesMerged);
 	}
 
 	public void displayNumNodesInfo() {
 		System.out.println("The total number of nodes is " + numNodes);
 	}
 
-	public void displayHeightInfo() {
+	public void displayHeight() {
 		System.out.println("The tree height is " + height);
 	}
 
-	public void displayTreeInfo() {
+	public void displayTree() {
 		// Reset all
-		numOfNodes = 0;
-		recordsCountTotal = 0;
-		recordsCountInANode = 0;
+		int numOfNodes = 0;
+		totalRecordsCount = 0;
+		nodeRecordCount = 0;
 		height = 0;
 		uniqueKeysCount = 1;
 
 		Queue<Node> queue = new LinkedList<Node>();
-		queue.add(this.root);
+		queue.add(this.rootNode);
 		queue.add(null);
 		Node curr = null;
 		int levelNumber = 2;
@@ -733,7 +732,7 @@ public class BPTree {
 				continue;
 			}
 
-			displayNodeInfo(curr);
+			displayNode(curr);
 			numOfNodes++;
 
 			if (curr.getChildren().isEmpty()) {
@@ -746,23 +745,23 @@ public class BPTree {
 
 		curr = curr.getNext();
 		while (null != curr) {
-			displayNodeInfo(curr);
+			displayNode(curr);
 			numOfNodes++;
 			curr = curr.getNext();
 		}
 		System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
-		System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
+		System.out.println("Total number of records in B+ tree is: " + totalRecordsCount);
 	}
 	public void displayDeleteInfo(){
 		displayUpdatedNodesInfo();
 
-		numOfNodes = 0;
-		recordsCountTotal = 0;
-		recordsCountInANode = 0;
+		int numOfNodes = 0;
+		totalRecordsCount = 0;
+		nodeRecordCount = 0;
 		height = 0;
 		uniqueKeysCount = 1;
 		Queue<Node> queue = new LinkedList<Node>();
-		queue.add(this.root);
+		queue.add(this.rootNode);
 		queue.add(null);
 		Node curr = null;
 		int levelNumber = 2;
@@ -783,11 +782,11 @@ public class BPTree {
 				continue;
 			}
 			if(rootAndFirst == 0) {
-				displayNodeInfo(curr);
+				displayNode(curr);
 			}
 			else if(rootAndFirst == 1) {
 				System.out.println("Printing First Child Node:");
-				displayNodeInfo(curr);
+				displayNode(curr);
 			}
 			numOfNodes++;
 
@@ -802,25 +801,25 @@ public class BPTree {
 
 		curr = curr.getNext();
 		while (null != curr) {
-//			displayNodeInfo(curr);
+//			displayNode(curr);
 			numOfNodes++;
 			curr = curr.getNext();
 		}
 		System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
-		System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
+		System.out.println("Total number of records in B+ tree is: " + totalRecordsCount);
 
-		displayHeightInfo();
+		displayHeight();
 	}
 
-	private void displayNodeInfo(Node curr) {
+	private void displayNode(Node curr) {
 
 		for (int i = 0; i < curr.getKeys().size(); i++) {
-			recordsCountInANode = 0;
+			nodeRecordCount = 0;
 			System.out.print(curr.getKeys().get(i).getKey() + ":(");
 			String values = "";
 			for (int j = 0; j < curr.getKeys().get(i).getValues().size(); j++) {
 				values = values + curr.getKeys().get(i).getValues().get(j) + ",";
-				recordsCountInANode++;
+				nodeRecordCount++;
 
 				/*
 				 * if(!values.isEmpty()) {
@@ -830,13 +829,13 @@ public class BPTree {
 
 			}
 
-			recordsCountTotal += recordsCountInANode;
+			totalRecordsCount += nodeRecordCount;
 			// System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
-			// recordsCountInANode + ")" + values.substring(0, values.length() - 1) +
+			// nodeRecordCount + ")" + values.substring(0, values.length() - 1) +
 			// ");\n");
 			// System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
-			// recordsCountInANode + ");");
-			System.out.print(values.isEmpty() ? ");" : recordsCountInANode + ");");
+			// nodeRecordCount + ");");
+			System.out.print(values.isEmpty() ? ");" : nodeRecordCount + ");");
 		}
 
 		if (curr.getKeys().size() != 0) {
@@ -845,11 +844,11 @@ public class BPTree {
 
 	}
 
-	public void printIndexNodeAccess() {
+	public void printIndexNodesAccessed() {
 		System.out.println("Number of Index Nodes Access: " + indexNodesAccess);
 	}
 
-	public void printDataBlockAccess() {
+	public void printDataBlocksAccessed() {
 		System.out.println("Number of Data Block Access: " + dataBlocksAccess);
 	}
 
