@@ -10,77 +10,36 @@ public class MainMemory {
 
 	public int memPoolSize; // Memory Pool Size
 	public int block_size; // Block Size
-	public int freeSize; // Free Size
-	public int sizeUsed; // Size Used
+	public int free_Size; // Free Size
+	public int sise_used; // Size Used
 	public int allocated; // Allocated Size
 	public int remaining; // Number of Blocks Remaining
 	public int block; // Number of Blocks
-	public int recordsPerBlock; // Number of Records Per Block
-	public int totalNoOfRecords; // Total Number of Records
-	public int totalBlockSize; // Total Block Size
-	public int totalRecordSize; // Total Record Size
-	public int recordCounter = 0; // Number of Record
-	public int databaseSize = 0; // Database Size
-	public int indexNodes = 0; // Number of Index Nodes
+	public int recPerBlock; // Number of Records Per Block
+	public int sumNoOfRecords; // Total Number of Records
+	public int sumBlockSize; // Total Block Size
+	public int sumRecSize; // Total Record Size
+	public int record_Count = 0; // Number of Record
+	public int db_S = 0; // Database Size
+	public int ind_N = 0; // Number of Index Nodes
 
 	private List<Block> listBlk; // Pointer to Data Block
 	private Block blk; // Block
 
 	public MainMemory(int poolSize, int blockSize) {
 		this.memPoolSize = poolSize;
-		this.freeSize = poolSize;
+		this.free_Size = poolSize;
 		this.block = poolSize;
 
 		this.block_size = blockSize;
 
 		this.remaining = poolSize / blockSize;
 
-		this.sizeUsed = 0;
+		this.sise_used = 0;
 		this.allocated = 0;
 		listBlk = new ArrayList<>();
 	}
 
-	public void AddBlock(Block newBlk, Record rec) {
-
-		// Block newBlk = new Block();
-		blk = newBlk;
-		blk.getRecords().add(rec);
-		// System.out.println("Each Block records size: " + blk.getRecords().size());
-		// System.out.println("***************************************");
-
-		// List<Block> currentBlk = blk;
-		// System.out.println("blk contents size: " + listBlk.size());
-
-		/*
-		 * for(int i = 0; i < currentBlk.size(); i ++) {
-		 * //System.out.println("records added content: " + currentBlk.get(i));
-		 * //System.out.println("*********************************"); }
-		 */
-		// if the number of records is full in a block, reset the record counter
-		if (recordCounter % recordsPerBlock == 0) {
-			recordCounter = 0;
-			this.sizeUsed += block_size;
-			totalBlockSize += block_size;
-			listBlk.add(blk);
-			// System.out.println("list block created: " + listBlk.size());
-
-			// Number of blocks remaining minus 1
-			this.remaining--;
-
-			// Number of blocks allocated plus 1
-			this.allocated++;
-		}
-
-		this.sizeUsed += recordSize;
-
-		totalRecordSize += recordSize;
-		// System.out.println(this.recordCounter + " Cumulative size used: " +
-		// this.sizeUsed);
-
-		// Keep track of the number of records in a block
-		this.recordCounter++;
-		// System.out.println("Record counter: " + recordCounter);
-	}
 
 	public void AllocateRecordToPool(Record rec) {
 		// String s = "tt0017626";
@@ -111,34 +70,56 @@ public class MainMemory {
 
 		// round down to the nearest whole number to get maximum number of records able
 		// to fit into a block
-		this.recordsPerBlock = (int) Math.floor((double) block_size / (double) recordSize);
+		this.recPerBlock = (int) Math.floor((double) block_size / (double) recordSize);
 
 	}
 
+	public void AddBlock(Block newBlk, Record rec) {
+
+		blk = newBlk;
+		blk.getRecords().add(rec);
+
+		if (record_Count % recPerBlock == 0) {
+			record_Count = 0;
+			this.sise_used += block_size;
+			sumBlockSize += block_size;
+			listBlk.add(blk);
+			
+			this.remaining--;
+
+			this.allocated++;
+		}
+
+		this.sise_used += recordSize;
+
+		sumRecSize += recordSize;
+		
+		this.record_Count++;
+	}
+
+	
 	public void DeallocateFromThePool() {
 
 		this.remaining++;
 
 		this.allocated--;
 
-		this.sizeUsed -= recordSize;
+		this.sise_used -= recordSize;
 
-		totalRecordSize -= recordSize;
+		sumRecSize -= recordSize;
 	}
 
 	public void saveRecordIntoMemory(int totalNoOfRecords) {
-		this.totalNoOfRecords = totalNoOfRecords;
+		this.sumNoOfRecords = totalNoOfRecords;
 
-		// round up to the nearest whole number to get minimum number of blocks
-		this.block = (int) Math.ceil((double) this.totalNoOfRecords / (double) recordsPerBlock);
+		this.block = (int) Math.ceil((double) this.sumNoOfRecords / (double) recPerBlock);
 	}
 
 	public int getRecordNo() {
-		return totalNoOfRecords;
+		return sumNoOfRecords;
 	}
 	
 	public List<Block> GetPointerBlockList(){
-		
 		
 		return listBlk;
 	}
