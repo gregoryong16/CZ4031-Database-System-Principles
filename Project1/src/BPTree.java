@@ -66,7 +66,7 @@ public class BPTree {
 
 		if (index != 0 && node.getKeys().get(index - 1).getKey() == key) {
 			// Add the new value to the list
-			node.getKeys().get(index - 1).getValues().add(value);
+			node.getKeys().get(index - 1).getRecords().add(value);
 		} else {
 			// Key is null => Add key and data
 			Key newKey = new Key(key, value);
@@ -87,7 +87,7 @@ public class BPTree {
 		Node newParentNode = new Node();
 		Node rightNode = new Node();
 
-		// Internal nodes do not contain values => Set only Keys
+		// Internal nodes do not contain records => Set only Keys
 		newParentNode.getKeys().add(new Key(current.getKeys().get(midIndex).getKey()));
 		newParentNode.getChildren().add(rightNode);
 
@@ -270,11 +270,11 @@ public class BPTree {
 			if (key == keyList.get(i).getKey()) {
 
 				System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
-				// System.out.println("Number of records=" + keyList.get(i).getValues().size() + " Records");
-				// System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+				// System.out.println("Number of records=" + keyList.get(i).getRecords().size() + " Records");
+				// System.out.println("Value (0)=" + keyList.get(i).getRecords().get(0));
 				dataBlocksAccess++;
 
-				recordList = keyList.get(i).getValues();
+				recordList = keyList.get(i).getRecords();
 
 			}
 			if (key < keyList.get(i).getKey()) {
@@ -310,11 +310,11 @@ public class BPTree {
 				if(current.getKeys().get(i).getKey() >= minKey && current.getKeys().get(i).getKey() <= maxKey){
 					dataBlocksAccess++;
 //					System.out.println("Data Block Access: Key=" + current.getKeys().get(i).getKey()
-//							+ " |\n Value=" + current.getKeys().get(i).getValues());
+//							+ " |\n Value=" + current.getKeys().get(i).getRecords());
 //
 //					System.out.println("Data Block Access: Key= " + current.getKeys().get(i).getKey());
-//					System.out.println("Value Size= " + current.getKeys().get(i).getValues().size() + " Records");
-//					System.out.println("Value (0)= " + current.getKeys().get(i).getValues().get(0));
+//					System.out.println("Value Size= " + current.getKeys().get(i).getRecords().size() + " Records");
+//					System.out.println("Value (0)= " + current.getKeys().get(i).getRecords().get(0));
 				}
 
 
@@ -870,27 +870,15 @@ public class BPTree {
 		for (int i = 0; i < current.getKeys().size(); i++) {
 			nodeRecordCount = 0;
 			System.out.print(current.getKeys().get(i).getKey() + ":[");
-			String values = "";
+			String records = "";
 			
-			for (int j = 0; j < current.getKeys().get(i).getValues().size(); j++) {
-				values = values + current.getKeys().get(i).getValues().get(j) + ",";
+			for (int j = 0; j < current.getKeys().get(i).getRecords().size(); j++) {
+				records = records + current.getKeys().get(i).getRecords().get(j) + ",";
 				nodeRecordCount++;
-
-				/*
-				 * if(!values.isEmpty()) {
-				 * System.out.print(current.getKeys().get(i).getValues().get(j).getTConst() + ",");
-				 * }
-				 */
-
 			}
 
 			totalRecordsCount += nodeRecordCount;
-			// System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
-			// nodeRecordCount + ")" + values.substring(0, values.length() - 1) +
-			// ");\n");
-			// System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
-			// nodeRecordCount + ");");
-			System.out.print(values.isEmpty() ? "], " : nodeRecordCount + "], ");
+			System.out.print(records.isEmpty() ? "], " : nodeRecordCount + "], ");
 		}
 
 		if (current.getKeys().size() != 0) {
@@ -923,12 +911,12 @@ public class BPTree {
 		for (int j = 0; j < search.size(); j++) {
 			System.out.println("\nnumVotes -> [Key: " + search.get(j).getKey() + "]");
 			dataBlocks++;
-			for (int y = 0; y < search.get(j).getValues().size(); y++) {
+			for (int y = 0; y < search.get(j).getRecords().size(); y++) {
 				x++;
 				System.out.print("  tConst: ");
-				System.out.print(search.get(j).getValues().get(y).getTConst() + ",");
-				System.out.print(" Average Rating: " + search.get(j).getValues().get(y).getAverageRating() + "\n");
-				totalAverageRating += search.get(j).getValues().get(y).getAverageRating();
+				System.out.print(search.get(j).getRecords().get(y).getTConst() + ",");
+				System.out.print(" Average Rating: " + search.get(j).getRecords().get(y).getAverageRating() + "\n");
+				totalAverageRating += search.get(j).getRecords().get(y).getAverageRating();
 				if (y % 100 == 0 && y != 0) {
 					System.out.print("\n");
 				}
