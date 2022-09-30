@@ -10,6 +10,14 @@ public class Record {
 		this.numVotes = numVotes;
 	}
 	
+	public Record(Record tempRecord) {
+		
+		this.tconst = tempRecord.tconst;
+		this.averageRating = tempRecord.averageRating;
+		this.numVotes = tempRecord.numVotes;
+		
+	}
+	
 	public String getTConst() {
 		return tconst;
 	}

@@ -15,7 +15,7 @@ public class main {
 
 		// 2: Set Database and B+ Tree Size
 		BPTree tree = null;
-		Database db = null;
+		MainMemory db = null;
 
 		boolean exit1 = false;
 		boolean selected = false;
@@ -32,13 +32,13 @@ public class main {
 			case 1:
 				// Experiment 1
 				tree = new BPTree(11); // 100 Bytes
-				db = new Database(500000000, 200); // 200 Bytes
+				db = new MainMemory(500000000, 200); // 200 Bytes
 				selected = true;
 				exit1 = true;
 				break;
 			case 2:
 				tree = new BPTree(27); // 500 Bytes
-				db = new Database(500000000, 500); // 500 Bytes
+				db = new MainMemory(500000000, 500); // 500 Bytes
 				selected = true;
 				exit1 = true;
 				break;
@@ -81,14 +81,14 @@ public class main {
 						Record rec = new Record(input[0], Integer.parseInt(String.valueOf(input[2])),
 								Integer.parseInt(String.valueOf(input[2])));
 
-						db.allocateRecord(rec);
+						db.AllocateRecordToPool(rec);
 
 						if (recordCounter % db.recordsPerBlock == 0) {
 							// System.out.println("i index: " + recordCounter);
 							newBlk = new Block();
 						}
 
-						db.allocateBlock(newBlk, rec);
+						db.AddBlock(newBlk, rec);
 
 						tree.insertKey(Integer.parseInt(String.valueOf(input[2])), rec);
 
@@ -102,7 +102,7 @@ public class main {
 				}
 				System.out.println(recordCounter);
 
-				db.setRecord(recordCounter);
+				db.saveRecordIntoMemory(recordCounter);
 				sc.close();
 				System.out.println("[Done Loading]");
 
@@ -127,7 +127,7 @@ public class main {
 
 						int indexNodes = tree.countTreeIndexNodes();
 						db.indexNodes = indexNodes;
-						db.printDatabaseInfo();
+						Printing.PrintDatabaseInfo(db);
 						break;
 					case 2:
 						// Experiment 2
