@@ -15,7 +15,7 @@ public class Block {
 		return records;
 	}
 
-	public void setRecords(List<Record> records) {
+	public void set_Records(List<Record> records) {
 		Iterator<Record> iter = records.iterator();
 		while (iter.hasNext()) {
 			this.records.add(iter.next());
