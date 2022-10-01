@@ -256,7 +256,12 @@ public class BPTree {
 		List<Key> keyArray = current.getKeys();
 		System.out.printf("Index Node Access: Node= [");
 		for (int i = 0; i < keyArray.size(); i++) {
-			System.out.printf("Key= " + keyArray.get(i).getKey() + ",");
+			if(i == keyArray.size()-1){
+				System.out.printf("Key= " + keyArray.get(i).getKey());
+			}
+			else{
+				System.out.printf("Key= " + keyArray.get(i).getKey() + ", ");
+			}
 		}
 
 		System.out.println("]");
@@ -268,10 +273,14 @@ public class BPTree {
 			List<Key> keyArray1 = current.getKeys();
 			System.out.printf("Index Node Access: Node= [");
 			for (int i = 0; i < keyArray1.size(); i++) {
-				System.out.printf("Key= " + keyArray1.get(i).getKey() + ",");
+				if(i == keyArray1.size()-1){
+					System.out.printf("Key= " + keyArray1.get(i).getKey());
+				}
+				else{
+					System.out.printf("Key= " + keyArray1.get(i).getKey() + ", ");
+				}
 			}
 			System.out.println("]");
-
 		}
 
 		List<Key> keyList = current.getKeys();
@@ -311,7 +320,12 @@ public class BPTree {
 		List<Key> keyArray = current.getKeys();
 		System.out.printf("Index Node Access: Node= [");
 		for (int i = 0; i < keyArray.size(); i++) {
-			System.out.printf("Key= " + keyArray.get(i).getKey() + ",");
+			if(i == keyArray.size()-1){
+				System.out.printf("Key= " + keyArray.get(i).getKey());
+			}
+			else{
+				System.out.printf("Key= " + keyArray.get(i).getKey() + ", ");
+			}
 		}
 
 		System.out.println("]");
@@ -322,7 +336,12 @@ public class BPTree {
 			List<Key> keyArray1 = current.getKeys();
 			System.out.printf("Index Node Access: Node= [");
 			for (int i = 0; i < keyArray1.size(); i++) {
-				System.out.printf("Key= " + keyArray1.get(i).getKey() + ",");
+				if(i == keyArray1.size()-1){
+					System.out.printf("Key= " + keyArray1.get(i).getKey());
+				}
+				else{
+					System.out.printf("Key= " + keyArray1.get(i).getKey() + ", ");
+				}
 			}
 			System.out.println("]");
 		}
