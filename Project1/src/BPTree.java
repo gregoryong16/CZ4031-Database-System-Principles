@@ -3,6 +3,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.swing.event.SwingPropertyChangeSupport;
+
 public class BPTree {
 
 	// B+ Tree Info
@@ -251,13 +253,25 @@ public class BPTree {
 
 		Node current = this.rootNode;
 		indexNodesAccess++;
-		System.out.println("Index Node Access: Node= " + current.getKeys());
+		List<Key> keyArray = current.getKeys();
+		System.out.printf("Index Node Access: Node= [");
+		for (int i = 0; i < keyArray.size(); i++) {
+			System.out.printf("Key= " + keyArray.get(i).getKey() + ",");
+		}
+
+		System.out.println("]");
 
 		// Traverse to the corresponding external node that would contain this key
 		while (current.getChildren().size() != 0) {
 			current = current.getChildren().get(searchInternalNode(key, current.getKeys()));
 			indexNodesAccess++;
-			System.out.println("Index Node Access: Node= " + current.getKeys());
+			List<Key> keyArray1 = current.getKeys();
+			System.out.printf("Index Node Access: Node= [");
+			for (int i = 0; i < keyArray1.size(); i++) {
+				System.out.printf("Key= " + keyArray1.get(i).getKey() + ",");
+			}
+			System.out.println("]");
+
 		}
 
 		List<Key> keyList = current.getKeys();
@@ -294,12 +308,23 @@ public class BPTree {
 		Node current = this.rootNode;
 
 		indexNodesAccess++;
-		System.out.println("Index Node Access: Node= " + current.getKeys());
+		List<Key> keyArray = current.getKeys();
+		System.out.printf("Index Node Access: Node= [");
+		for (int i = 0; i < keyArray.size(); i++) {
+			System.out.printf("Key= " + keyArray.get(i).getKey() + ",");
+		}
+
+		System.out.println("]");
 
 		while (current.getChildren().size() != 0) {
 			indexNodesAccess++;
 			current = current.getChildren().get(searchInternalNode(minKey, current.getKeys()));
-			System.out.println("Index Node Access: Node= " + current.getKeys());
+			List<Key> keyArray1 = current.getKeys();
+			System.out.printf("Index Node Access: Node= [");
+			for (int i = 0; i < keyArray1.size(); i++) {
+				System.out.printf("Key= " + keyArray1.get(i).getKey() + ",");
+			}
+			System.out.println("]");
 		}
 
 		// Stop if value encountered in list is greater than key2
