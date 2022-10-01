@@ -123,7 +123,7 @@ public class main {
 								// Experiment 1
 								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~Experiment 1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
-								int indexNodes = tree.countNumberOfNodes();
+								int indexNodes = tree.countNumberOfIndexNodes();
 								db.ind_N = indexNodes;
 								Printing Printer = new Printing();
 								Printer.PrintDatabaseInfo(db);

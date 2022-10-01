@@ -330,7 +330,7 @@ public class BPTree {
 		return searchs;
 	}
 	
-	public int countNumberOfNodes() {
+	public int countNumberOfIndexNodes() {
 		int countIndexNodes = 0;
 		
 		Queue<Node> queue = new LinkedList<Node>();
