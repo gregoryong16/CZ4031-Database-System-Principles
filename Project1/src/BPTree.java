@@ -972,7 +972,7 @@ public class BPTree {
 		System.out.println("\nTotal Data Blocks: " + dataBlocks);
 		System.out.println("\n===================Part 3: Average of 'avgRatings' ===================");
 		System.out.println("Total Records: " + x);
-		System.out.printf("Average of avgRatings: %.1f\n\n",totalAverageRating/x);
+		System.out.printf("Average of avgRatings: %.3f\n\n",totalAverageRating/x);
 	}
 
 }

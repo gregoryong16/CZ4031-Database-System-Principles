@@ -31,13 +31,13 @@ public class main {
 			switch (choice) {
 				case 1:
 					// Experiment 1
-					tree = new BPTree(12); // 100 Bytes
+					tree = new BPTree(17); // 100 Bytes
 					db = new MainMemory(500000000, 200); // 200 Bytes
 					selected = true;
 //					exit1 = true;
 					break;
 				case 2:
-					tree = new BPTree(28); // 500 Bytes
+					tree = new BPTree(42); // 500 Bytes
 					db = new MainMemory(500000000, 500); // 500 Bytes
 					selected = true;
 //					exit1 = true;
@@ -161,7 +161,7 @@ public class main {
 								tree.printIndexNodesAccessed();
 								tree.printDataBlocksAccessed();
 								System.out.println("Total Records: " + recordList.size());
-								System.out.printf("Average of \"averageRating's\" of records: %.1f \n" , (sum/recordList.size()));
+								System.out.printf("Average of \"averageRating's\" of records: %.3f \n" , (sum/recordList.size()));
 								
 								break;
 
